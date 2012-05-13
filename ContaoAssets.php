@@ -34,6 +34,9 @@ class ContaoAssets {
   // The stylesheet string that will be used by sprintf to add a stylesheet file
   private $stylesheet_str = '<link rel="stylesheet" type="text/css" href="%s" />';
 
+  // The IE specific string
+  private $internet_explorer_str = '<!--[if IE%s]>%s<![endif]-->';
+
   // Internal objects
   private $objPage, $objLayout, $objPageRegular, $manifest;
 
@@ -81,7 +84,16 @@ class ContaoAssets {
   private function addStylesheets() {
 
     foreach($this->manifest->stylesheets as $stylesheet) {
-      $this->prependHead(sprintf($this->stylesheet_str, TL_CONTAO_ASSETS_PUBLIC_PATH . '/' . $stylesheet));
+      $asset = sprintf($this->stylesheet_str, TL_CONTAO_ASSETS_PUBLIC_PATH . '/' . $stylesheet);
+
+      if(preg_match('/ie([0-9]*).*\.css/', basename($stylesheet), $matches)) {
+        if($matches[1] > 0)
+          $asset = sprintf($this->internet_explorer_str, ' ' . $matches[1], $asset);
+        else
+          $asset = sprintf($this->internet_explorer_str, '', $asset);
+      }
+
+      $this->prependHead($asset);
     }
   }
 
