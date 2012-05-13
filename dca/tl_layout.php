@@ -26,12 +26,13 @@
  * @filesource
  */
 
-// InsertTag
-$GLOBALS['TL_HOOKS']['generatePage'][] = array('ContaoAssets', 'addContaoAssets');
+$GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] = str_replace('head;','enableContaoAssets,head;',$GLOBALS['TL_DCA']['tl_layout']['palettes']['default']);
 
-// Define a couple of variables
-define('TL_CONTAO_ASSETS_PUBLIC_PATH', '/resources');
-define('TL_CONTAO_ASSETS_PATH', TL_ROOT . TL_CONTAO_ASSETS_PUBLIC_PATH);
-define('TL_CONTAO_ASSETS_MANIFEST', TL_CONTAO_ASSETS_PATH . '/manifest.json');
+$GLOBALS['TL_DCA']['tl_layout']['fields']['enableContaoAssets'] = array(
+  'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['enableContaoAssets'],
+  'exclude'                 => true,
+  'inputType'               => 'checkbox',
+  'eval'                    => array('tl_class' => 'w50 m12')
+);
 
 ?>

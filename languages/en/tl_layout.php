@@ -26,12 +26,8 @@
  * @filesource
  */
 
-// InsertTag
-$GLOBALS['TL_HOOKS']['generatePage'][] = array('ContaoAssets', 'addContaoAssets');
-
-// Define a couple of variables
-define('TL_CONTAO_ASSETS_PUBLIC_PATH', '/resources');
-define('TL_CONTAO_ASSETS_PATH', TL_ROOT . TL_CONTAO_ASSETS_PUBLIC_PATH);
-define('TL_CONTAO_ASSETS_MANIFEST', TL_CONTAO_ASSETS_PATH . '/manifest.json');
-
+/**
+ * Fields
+ */
+$GLOBALS['TL_LANG']['tl_layout']['enableContaoAssets'] = array('Enable Contao Assets', 'Enables assets coming from the contao ruby gem.');
 ?>

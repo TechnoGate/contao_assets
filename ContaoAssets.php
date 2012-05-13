@@ -26,11 +26,72 @@
  * @filesource
  */
 
-class ContaoAssets extends PageRegular {
+class ContaoAssets {
 
-  public function addContaoAssets($objPage, $objLayout, $objPageRegular} {
+  // The javascript string that will be used by sprintf to add a javascript file
+  private $javascript_str = '<script type="text/javascript" src="%s"></script>';
+
+  // The stylesheet string that will be used by sprintf to add a stylesheet file
+  private $stylesheet_str = '<link rel="stylesheet" type="text/css" href="%s" />';
+
+  // Internal objects
+  private $objPage, $objLayout, $objPageRegular, $manifest;
+
+  public function addContaoAssets($objPage, $objLayout, $objPageRegular) {
+    $this->objPage        = $objPage;
+    $this->objLayout      = $objLayout;
+    $this->objPageRegular = $objPageRegular;
+    $this->loadManifest();
 
     if($objLayout->enableContaoAssets) {
+      $this->addStylesheets();
+      $this->addJavascripts();
+    }
+  }
+
+  /**
+   *
+   * This function adds the given asset (Fully qualified HTML)
+   * to the TL_HEAD global variable which gets parsed by the PageRegular
+   *
+   * @param [String] $asset
+   */
+  private function prependHead($asset) {
+    if (!array_key_exists('TL_HEAD', $GLOBALS) || !is_array($GLOBALS['TL_HEAD']))
+      $GLOBALS['TL_HEAD'] = array();
+
+    $GLOBALS['TL_HEAD'][] = $asset;
+  }
+
+  /**
+   * This function loads up the manifest and decode into a PHP object
+   */
+  private function loadManifest() {
+    if (empty($this->manifest)) {
+      if(!file_exists(TL_CONTAO_ASSETS_MANIFEST))
+        throw new Exception("The manifest does not exist, did you run 'rake assets:precompile'?");
+
+      $this->manifest = json_decode(file_get_contents(TL_CONTAO_ASSETS_MANIFEST));
+    }
+  }
+
+  /**
+   * This function adds stylesheet files into the head
+   */
+  private function addStylesheets() {
+
+    foreach($this->manifest->stylesheets as $stylesheet) {
+      $this->prependHead(sprintf($this->stylesheet_str, TL_CONTAO_ASSETS_PUBLIC_PATH . '/' . $stylesheet));
+    }
+  }
+
+  /**
+   * This function adds javascript files into the head
+   */
+  private function addJavascripts() {
+
+    foreach($this->manifest->javascripts as $javascript) {
+      $this->prependHead(sprintf($this->javascript_str, TL_CONTAO_ASSETS_PUBLIC_PATH . '/' . $javascript));
     }
   }
 }
