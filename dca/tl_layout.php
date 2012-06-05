@@ -32,6 +32,7 @@ $GLOBALS['TL_DCA']['tl_layout']['palettes']['default'] = str_replace('head;','en
 
 $GLOBALS['TL_DCA']['tl_layout']['fields']['enableContaoAssets'] = array(
   'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['enableContaoAssets'],
+  'default'                 => 1,
   'exclude'                 => true,
   'inputType'               => 'checkbox',
   'eval'                    => array('tl_class' => 'w50 m12')
