@@ -28,7 +28,7 @@
  * @filesource
  */
 
-class ContaoAssets {
+class ContaoAssets extends Backend {
 
   // The javascript string that will be used by sprintf to add a javascript file
   private $javascript_str = '<script type="text/javascript" src="%s"></script>';
@@ -73,8 +73,10 @@ class ContaoAssets {
    */
   private function loadManifest() {
     if (empty($this->manifest)) {
-      if(!file_exists(TL_CONTAO_ASSETS_MANIFEST))
-        throw new Exception("The manifest does not exist, did you run 'rake assets:precompile'?");
+      if(!file_exists(TL_CONTAO_ASSETS_MANIFEST)) {
+        $this->log("The manifest does not exist, did you run 'bundle exec rake assets:precompile'?", 'ContaoAssets loadManifest()', TL_ERROR);
+        throw new Exception("The manifest does not exist, did you run 'bundle exec rake assets:precompile'?");
+      }
 
       $this->manifest = json_decode(file_get_contents(TL_CONTAO_ASSETS_MANIFEST));
     }
