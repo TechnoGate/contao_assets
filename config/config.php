@@ -32,8 +32,8 @@
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('ContaoAssets', 'addContaoAssets');
 
 // Define a couple of variables
-define('TL_CONTAO_ASSETS_PUBLIC_PATH', '/resources');
-define('TL_CONTAO_ASSETS_PATH', TL_ROOT . TL_CONTAO_ASSETS_PUBLIC_PATH);
+define('TL_CONTAO_ASSETS_PUBLIC_PATH', 'resources');
+define('TL_CONTAO_ASSETS_PATH', TL_ROOT . '/' . TL_CONTAO_ASSETS_PUBLIC_PATH);
 define('TL_CONTAO_ASSETS_MANIFEST', TL_CONTAO_ASSETS_PATH . '/manifest.json');
 
 ?>
