@@ -35,5 +35,7 @@ $GLOBALS['TL_HOOKS']['generatePage'][] = array('ContaoAssets', 'addContaoAssets'
 define('TL_CONTAO_ASSETS_PUBLIC_PATH', 'resources');
 define('TL_CONTAO_ASSETS_PATH', TL_ROOT . '/' . TL_CONTAO_ASSETS_PUBLIC_PATH);
 define('TL_CONTAO_ASSETS_MANIFEST', TL_CONTAO_ASSETS_PATH . '/manifest.json');
+define('TL_CONTAO_ASSETS_RAILS_HOST', 'localhost');
+define('TL_CONTAO_ASSETS_RAILS_PORT', '9876');
 
 ?>

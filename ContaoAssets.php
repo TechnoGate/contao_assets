@@ -36,9 +36,6 @@ class ContaoAssets extends Backend {
   // The stylesheet string that will be used by sprintf to add a stylesheet file
   private $stylesheet_str = '<link rel="stylesheet" type="text/css" href="%s" />';
 
-  // The IE specific string
-  private $internet_explorer_str = '<!--[if IE%s]>%s<![endif]-->';
-
   // Internal objects
   private $objPage, $objLayout, $objPageRegular, $manifest;
 
@@ -61,11 +58,11 @@ class ContaoAssets extends Backend {
    *
    * @param [String] $asset
    */
-  private function prependHead($asset) {
+  private function prependHead($string, $asset) {
     if (!array_key_exists('TL_HEAD', $GLOBALS) || !is_array($GLOBALS['TL_HEAD']))
       $GLOBALS['TL_HEAD'] = array();
 
-    $GLOBALS['TL_HEAD'][] = $asset;
+    $GLOBALS['TL_HEAD'][] = sprintf($string, $this->assets_url() . '/' . $asset);
   }
 
   /**
@@ -74,11 +71,11 @@ class ContaoAssets extends Backend {
   private function loadManifest() {
     if (empty($this->manifest)) {
       if(!file_exists(TL_CONTAO_ASSETS_MANIFEST)) {
-        $this->log("The manifest does not exist, did you run 'bundle exec rake assets:precompile'?", 'ContaoAssets loadManifest()', TL_ERROR);
-        throw new Exception("The manifest does not exist, did you run 'bundle exec rake assets:precompile'?");
+        $this->log("The manifest does not exist, serving application.css and application.js", 'ContaoAssets loadManifest()', TL_WARN);
+        $this->manifest = false;
+      } else {
+        $this->manifest = json_decode(file_get_contents(TL_CONTAO_ASSETS_MANIFEST));
       }
-
-      $this->manifest = json_decode(file_get_contents(TL_CONTAO_ASSETS_MANIFEST));
     }
   }
 
@@ -87,17 +84,12 @@ class ContaoAssets extends Backend {
    */
   private function addStylesheets() {
 
-    foreach($this->manifest->stylesheets as $stylesheet) {
-      $asset = sprintf($this->stylesheet_str, TL_CONTAO_ASSETS_PUBLIC_PATH . '/' . $stylesheet);
-
-      if(preg_match('/ie([0-9]*).*\.css/', basename($stylesheet), $matches)) {
-        if($matches[1] > 0)
-          $asset = sprintf($this->internet_explorer_str, ' ' . $matches[1], $asset);
-        else
-          $asset = sprintf($this->internet_explorer_str, '', $asset);
+    if ($this->manifest) {
+      foreach($this->manifest->stylesheets as $stylesheet) {
+        $this->prependHead($this->stylesheet_str, $asset);
       }
-
-      $this->prependHead($asset);
+    } else {
+      $this->prependHead($this->stylesheet_str, 'application.css');
     }
   }
 
@@ -106,9 +98,23 @@ class ContaoAssets extends Backend {
    */
   private function addJavascripts() {
 
-    foreach($this->manifest->javascripts as $javascript) {
-      $this->prependHead(sprintf($this->javascript_str, TL_CONTAO_ASSETS_PUBLIC_PATH . '/' . $javascript));
+    if ($this->manifest) {
+      foreach($this->manifest->javascripts as $javascript) {
+        $this->prependHead($this->javascript_str, $javascript);
+      }
+    } else {
+      $this->prependHead($this->javascript_str, 'application.js');
     }
+  }
+
+  /**
+   * This function returns either TL_CONTAO_ASSETS_PUBLIC_PATH or TL_CONTAO_ASSETS_RAILS_HOST
+   */
+  private function assets_url() {
+    if ($this->manifest)
+      return TL_CONTAO_ASSETS_PUBLIC_PATH;
+    else
+      return 'http://' . TL_CONTAO_ASSETS_RAILS_HOST . ':' . TL_CONTAO_ASSETS_RAILS_PORT . '/assets';
   }
 }
 
