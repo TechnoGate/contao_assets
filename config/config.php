@@ -37,5 +37,6 @@ define('TL_CONTAO_ASSETS_PATH', TL_ROOT . '/' . TL_CONTAO_ASSETS_PUBLIC_PATH);
 define('TL_CONTAO_ASSETS_MANIFEST', TL_CONTAO_ASSETS_PATH . '/manifest.json');
 define('TL_CONTAO_ASSETS_RAILS_HOST', 'localhost');
 define('TL_CONTAO_ASSETS_RAILS_PORT', '9876');
+define('TL_CONTAO_ASSETS_RAILS_PATH', '/assets');
 
 ?>

@@ -72,7 +72,10 @@ class ContaoAssets extends Backend {
     if (empty($this->manifest)) {
       if(!file_exists(TL_CONTAO_ASSETS_MANIFEST)) {
         $this->log("The manifest does not exist, serving application.css and application.js", 'ContaoAssets loadManifest()', TL_WARN);
-        $this->manifest = false;
+        $this->manifest = (object) array(
+          'stylesheets' => array('application.css'),
+          'javascripts' => array('application.js'),
+        );
       } else {
         $this->manifest = json_decode(file_get_contents(TL_CONTAO_ASSETS_MANIFEST));
       }
@@ -84,12 +87,8 @@ class ContaoAssets extends Backend {
    */
   private function addStylesheets() {
 
-    if ($this->manifest) {
-      foreach($this->manifest->stylesheets as $stylesheet) {
-        $this->prependHead($this->stylesheet_str, $asset);
-      }
-    } else {
-      $this->prependHead($this->stylesheet_str, 'application.css');
+    foreach($this->manifest->stylesheets as $stylesheet) {
+      $this->prependHead($this->stylesheet_str, $stylesheet);
     }
   }
 
@@ -98,23 +97,19 @@ class ContaoAssets extends Backend {
    */
   private function addJavascripts() {
 
-    if ($this->manifest) {
-      foreach($this->manifest->javascripts as $javascript) {
-        $this->prependHead($this->javascript_str, $javascript);
-      }
-    } else {
-      $this->prependHead($this->javascript_str, 'application.js');
+    foreach($this->manifest->javascripts as $javascript) {
+      $this->prependHead($this->javascript_str, $javascript);
     }
   }
 
   /**
-   * This function returns either TL_CONTAO_ASSETS_PUBLIC_PATH or TL_CONTAO_ASSETS_RAILS_HOST
+   * This function returns either TL_CONTAO_ASSETS_PATH or TL_CONTAO_ASSETS_RAILS_HOST
    */
   private function assets_url() {
-    if ($this->manifest)
-      return TL_CONTAO_ASSETS_PUBLIC_PATH;
+    if(!file_exists(TL_CONTAO_ASSETS_MANIFEST))
+      return 'http://' . TL_CONTAO_ASSETS_RAILS_HOST . ':' . TL_CONTAO_ASSETS_RAILS_PORT . TL_CONTAO_ASSETS_RAILS_PATH;
     else
-      return 'http://' . TL_CONTAO_ASSETS_RAILS_HOST . ':' . TL_CONTAO_ASSETS_RAILS_PORT . '/assets';
+      return TL_CONTAO_ASSETS_PATH;
   }
 }
 
