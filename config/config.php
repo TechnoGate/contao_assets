@@ -28,7 +28,10 @@
  * @filesource
  */
 
-// InsertTag
+// replaceInsertTags Hook
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('ContaoAssets', 'replaceInsertTags');
+
+// generatePage Hook
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('ContaoAssets', 'addContaoAssets');
 
 // Define a couple of variables

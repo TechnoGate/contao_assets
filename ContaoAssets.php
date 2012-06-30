@@ -51,6 +51,26 @@ class ContaoAssets extends Backend {
     }
   }
 
+  public function replaceInsertTags($strTag) {
+    $strBuffer = '';
+    $elements = explode('::', $strTag);
+    $this->loadManifest();
+
+    if (!array_key_exists($elements[1], $this->manifest))
+      return $strBuffer;
+
+    switch(strtolower($elements[0])) {
+      case 'asset_path':
+        $strBuffer .= $this->assets_path() . '/' . $this->manifest[$elements[1]];
+        break;
+      case 'asset_url':
+        $strBuffer .= $this->assets_url() . '/' . $this->manifest[$elements[1]];
+        break;
+    }
+
+    return $strBuffer;
+  }
+
   /**
    *
    * This function adds the given asset (Fully qualified HTML)
@@ -87,7 +107,14 @@ class ContaoAssets extends Backend {
    */
   private function assets_url() {
     if(!file_exists(TL_CONTAO_ASSETS_MANIFEST))
-      return 'http://' . TL_CONTAO_ASSETS_RAILS_HOST . ':' . TL_CONTAO_ASSETS_RAILS_PORT . TL_CONTAO_ASSETS_RAILS_PATH;
+      return 'http://' . TL_CONTAO_ASSETS_RAILS_HOST . ':' . TL_CONTAO_ASSETS_RAILS_PORT . $this->assets_path();
+    else
+      return $this->assets_path();
+  }
+
+  private function assets_path() {
+    if(!file_exists(TL_CONTAO_ASSETS_MANIFEST))
+      return TL_CONTAO_ASSETS_RAILS_PATH;
     else
       return TL_CONTAO_ASSETS_PUBLIC_PATH;
   }
