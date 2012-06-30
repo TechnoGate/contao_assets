@@ -29,7 +29,7 @@
  */
 
 // replaceInsertTags Hook
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('ContaoAssets', 'replaceInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('ContaoAssets', 'assetsInsertTags');
 
 // generatePage Hook
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('ContaoAssets', 'addContaoAssets');

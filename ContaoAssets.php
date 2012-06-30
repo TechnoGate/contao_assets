@@ -51,7 +51,7 @@ class ContaoAssets extends Backend {
     }
   }
 
-  public function replaceInsertTags($strTag) {
+  public function assetsInsertTags($strTag) {
     $strBuffer = '';
     $elements = explode('::', $strTag);
     $this->loadManifest();
