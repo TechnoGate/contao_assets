@@ -48,7 +48,7 @@ define('TL_CONTAO_ASSETS_PREFIX', 'resources');
 define('TL_CONTAO_ASSETS_MANIFEST', TL_ROOT . '/' . TL_CONTAO_ASSETS_PREFIX . '/manifest.yml');
 
 define('TL_CONTAO_ASSETS_PUBLIC_PATH', $websitePath . TL_CONTAO_ASSETS_PREFIX);
-define('TL_CONTAO_ASSETS_RAILS_HOST', 'localhost');
+define('TL_CONTAO_ASSETS_RAILS_HOST', 'assets.vcap.me');
 define('TL_CONTAO_ASSETS_RAILS_PORT', '9876');
 define('TL_CONTAO_ASSETS_RAILS_PATH', '/' . TL_CONTAO_ASSETS_PREFIX);
 
